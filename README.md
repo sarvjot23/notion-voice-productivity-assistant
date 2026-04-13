@@ -21,7 +21,7 @@ Ensure you have Docker and Docker Compose installed on your machine. Follow thes
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/notion-voice-productivity-assistant.git
+   git clone https://github.com/sarvjot23/notion-voice-productivity-assistant.git
    cd notion-voice-productivity-assistant
    ```
 
@@ -48,7 +48,3 @@ Through this project, I gained practical experience with:
 - Integrating third-party services like Notion, Google Calendar, and Todoist.
 - Managing dependencies and containerizing applications with Docker.
 - Structuring a project directory for maintainability and scalability.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
