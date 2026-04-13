@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Voice Productivity Assistant</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Voice Assistant</h1>
+      <div class="status-row">
+        <span id="status-dot" class="status-dot idle"></span>
+        <span id="status-text" class="status-text">Ready</span>
+      </div>
+    </header>
+
+    <main>
+      <button id="toggle-btn" class="toggle-btn" aria-label="Start conversation">
+        <svg id="mic-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="36" height="36">
+          <path d="M12 1a4 4 0 0 1 4 4v6a4 4 0 0 1-8 0V5a4 4 0 0 1 4-4zm0 2a2 2 0 0 0-2 2v6a2 2 0 0 0 4 0V5a2 2 0 0 0-2-2zm-1 15.93V21h2v-2.07A8.001 8.001 0 0 0 20 11h-2a6 6 0 0 1-12 0H4a8.001 8.001 0 0 0 7 7.93z"/>
+        </svg>
+        <span id="btn-label">Start</span>
+      </button>
+
+      <div id="transcript-container" class="transcript-container" aria-live="polite" aria-label="Conversation transcript">
+        <p class="transcript-hint">Press Start and speak naturally.<br>No push-to-talk required.</p>
+      </div>
+    </main>
+
+    <footer>
+      <p class="footer-hint">Powered by ElevenLabs Conversational AI</p>
+    </footer>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

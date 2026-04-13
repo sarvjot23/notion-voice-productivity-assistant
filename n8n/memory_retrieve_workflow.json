@@ -1,0 +1,50 @@
+{
+  "name": "Memory Retrieve",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "memory/retrieve",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "node-webhook",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const store = $getWorkflowStaticData('global');\nif (!store.sessions) store.sessions = {};\n\nconst body = $input.first().json.body ?? $input.first().json;\nconst sessionId = body.session_id ?? 'default';\n\nconst allTurns = store.sessions[sessionId] ?? [];\n\n// Return last 5 turns in chronological order\nconst recentTurns = allTurns.slice(-5);\n\n// Extract known contacts (names mentioned alongside action words)\nconst knownContacts = {};\nallTurns.forEach(turn => {\n  const matches = (turn.transcript ?? '').match(/(?:call|meet|email|with|for)\\s+([A-Z][a-z]+)/g);\n  if (matches) {\n    matches.forEach(m => {\n      const name = m.split(' ').pop();\n      knownContacts[name] = (knownContacts[name] ?? 0) + 1;\n    });\n  }\n});\n\nreturn [{ json: { recent_turns: recentTurns, known_contacts: knownContacts, preferences: {} } }];"
+      },
+      "id": "node-retrieve",
+      "name": "Retrieve Context",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}"
+      },
+      "id": "node-respond",
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [680, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{ "node": "Retrieve Context", "type": "main", "index": 0 }]]
+    },
+    "Retrieve Context": {
+      "main": [[{ "node": "Respond", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": true,
+  "settings": { "executionOrder": "v1" },
+  "tags": ["memory", "voice-assistant"]
+}

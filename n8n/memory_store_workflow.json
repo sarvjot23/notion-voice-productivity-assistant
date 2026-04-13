@@ -1,0 +1,50 @@
+{
+  "name": "Memory Store",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "memory/store",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "node-webhook",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// getWorkflowStaticData persists between runs — no external DB needed\nconst store = $getWorkflowStaticData('global');\nif (!store.sessions) store.sessions = {};\n\nconst body = $input.first().json.body ?? $input.first().json;\nconst sessionId = body.session_id ?? 'default';\n\nif (!store.sessions[sessionId]) store.sessions[sessionId] = [];\n\nconst turn = {\n  transcript: body.transcript ?? '',\n  action_taken: body.action_taken ?? null,\n  result_summary: body.result_summary ?? null,\n  timestamp: body.timestamp ?? new Date().toISOString()\n};\n\n// Keep last 20 turns per session\nstore.sessions[sessionId].push(turn);\nif (store.sessions[sessionId].length > 20) {\n  store.sessions[sessionId] = store.sessions[sessionId].slice(-20);\n}\n\nreturn [{ json: { success: true, session_id: sessionId, turn_count: store.sessions[sessionId].length } }];"
+      },
+      "id": "node-store",
+      "name": "Store Turn",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}"
+      },
+      "id": "node-respond",
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [680, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{ "node": "Store Turn", "type": "main", "index": 0 }]]
+    },
+    "Store Turn": {
+      "main": [[{ "node": "Respond", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": true,
+  "settings": { "executionOrder": "v1" },
+  "tags": ["memory", "voice-assistant"]
+}

@@ -1,0 +1,191 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #0f0f13;
+  --surface: #1a1a22;
+  --border: #2a2a38;
+  --accent: #7c6af7;
+  --accent-hover: #9d8fff;
+  --text: #e8e8f0;
+  --muted: #6b6b80;
+  --success: #4caf7d;
+  --error: #e05555;
+  --listening: #f7c948;
+  --speaking: #4cb8f7;
+  --radius: 12px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  width: 100%;
+  max-width: 600px;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+h1 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--muted);
+  transition: background 0.3s ease;
+}
+
+.status-dot.idle       { background: var(--muted); }
+.status-dot.connecting { background: var(--accent); animation: pulse 1s infinite; }
+.status-dot.listening  { background: var(--listening); animation: pulse 0.8s infinite; }
+.status-dot.processing { background: var(--accent); animation: pulse 0.5s infinite; }
+.status-dot.speaking   { background: var(--speaking); animation: pulse 1.2s infinite; }
+.status-dot.error      { background: var(--error); }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+.status-text {
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-transform: capitalize;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.toggle-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.5rem 2rem;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: background 0.2s ease, transform 0.1s ease;
+  user-select: none;
+  min-width: 120px;
+}
+
+.toggle-btn:hover {
+  background: var(--accent-hover);
+}
+
+.toggle-btn:active {
+  transform: scale(0.97);
+}
+
+.toggle-btn.active {
+  background: var(--error);
+}
+
+.toggle-btn.active:hover {
+  background: #f07070;
+}
+
+.transcript-container {
+  width: 100%;
+  min-height: 300px;
+  max-height: 500px;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.transcript-hint {
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-align: center;
+  line-height: 1.6;
+  margin: auto;
+}
+
+.transcript-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.transcript-entry .speaker {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.transcript-entry.user .speaker { color: var(--listening); }
+.transcript-entry.agent .speaker { color: var(--speaking); }
+
+.transcript-entry .message {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+footer {
+  text-align: center;
+}
+
+.footer-hint {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* Scrollbar */
+.transcript-container::-webkit-scrollbar { width: 4px; }
+.transcript-container::-webkit-scrollbar-track { background: transparent; }
+.transcript-container::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
